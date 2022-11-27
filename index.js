@@ -2,9 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+// const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const port = process.env.PORT || 5000;
 
@@ -22,6 +22,19 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
+async function run() {
+  try {
+    const userCollection = client.db('simpleNode').collection('products');
+
+    app.get('/products', async (req, res) => {
+      const cursor = userCollection.find({});
+      const products = await cursor.toArray();
+      res.send(products);
+    });
+  } finally {
+  }
+}
+run().catch(console.log);
 
 app.get('/', async (req, res) => {
   res.send('Diamond Tech server is running');
