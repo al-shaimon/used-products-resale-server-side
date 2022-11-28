@@ -25,11 +25,19 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const userCollection = client.db('simpleNode').collection('products');
+    const bookingsCollection = client.db('simpleNode').collection('bookingsCollection');
 
     app.get('/products', async (req, res) => {
       const cursor = userCollection.find({});
       const products = await cursor.toArray();
       res.send(products);
+    });
+
+    app.post('/bookings', async (req, res) => {
+      const booking = req.body;
+      console.log(booking);
+      const result = await bookingsCollection.insertOne(booking);
+      res.send(result);
     });
   } finally {
   }
