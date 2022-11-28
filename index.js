@@ -26,11 +26,19 @@ async function run() {
   try {
     const userCollection = client.db('simpleNode').collection('products');
     const bookingsCollection = client.db('simpleNode').collection('bookingsCollection');
+    const usersCollection = client.db('simpleNode').collection('usersCollection');
 
     app.get('/products', async (req, res) => {
       const cursor = userCollection.find({});
       const products = await cursor.toArray();
       res.send(products);
+    });
+
+    app.get('/bookings', async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const bookings = await bookingsCollection.find(query).toArray();
+      res.send(bookings);
     });
 
     app.post('/bookings', async (req, res) => {
@@ -50,6 +58,12 @@ async function run() {
       }
 
       const result = await bookingsCollection.insertOne(booking);
+      res.send(result);
+    });
+
+    app.post('/users', async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
       res.send(result);
     });
   } finally {
